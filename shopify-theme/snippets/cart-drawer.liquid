@@ -5,7 +5,7 @@
 <cart-drawer class="cart-drawer" id="CartDrawer">
   <div class="cart-drawer__header">
     <h2 class="cart-drawer__title">
-      {{ section.settings.heading | default: '🛍️ Your Cart' }}
+🛍️ Your Cart
     </h2>
     <button 
       class="cart-drawer__close"
@@ -24,10 +24,10 @@
       <div class="cart-drawer__empty">
         <div class="empty-state">
           <div class="empty-state__icon">🐕</div>
-          <h3>{{ section.settings.empty_heading | default: 'Your cart is empty' }}</h3>
-          <p>{{ section.settings.empty_text | default: 'Start shopping for your pup!' }}</p>
+          <h3>Your cart is empty</h3>
+          <p>Start shopping for your pup!</p>
           <a href="{{ routes.all_products_collection_url }}" class="btn" onclick="this.closest('cart-drawer').close()">
-            {{ section.settings.continue_shopping | default: 'Continue Shopping' }}
+Continue Shopping
           </a>
         </div>
       </div>
@@ -139,7 +139,7 @@
                   type="button"
                   aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}"
                 >
-                  {{ section.settings.remove_button_text | default: '🗑️ Remove' }}
+🗑️ Remove
                 </button>
               </cart-remove-button>
             </div>
@@ -211,7 +211,7 @@
           form="CartDrawer-Form"
           formaction="{{ routes.cart_url }}"
         >
-          {{ section.settings.checkout_button_text | default: '🚀 Checkout' }}
+🚀 Checkout
         </button>
       </div>
     </div>
@@ -227,46 +227,3 @@
 
 <div class="cart-overlay" onclick="document.getElementById('CartDrawer').close()"></div>
 
-{% schema %}
-{
-  "name": "Cart drawer",
-  "settings": [
-    {
-      "type": "text",
-      "id": "heading",
-      "default": "🛍️ Your Cart",
-      "label": "Heading"
-    },
-    {
-      "type": "text",
-      "id": "empty_heading",
-      "default": "Your cart is empty",
-      "label": "Empty cart heading"
-    },
-    {
-      "type": "text",
-      "id": "empty_text",
-      "default": "Start shopping for your pup!",
-      "label": "Empty cart text"
-    },
-    {
-      "type": "text",
-      "id": "continue_shopping",
-      "default": "Continue Shopping",
-      "label": "Continue shopping button text"
-    },
-    {
-      "type": "text",
-      "id": "remove_button_text",
-      "default": "🗑️ Remove",
-      "label": "Remove button text"
-    },
-    {
-      "type": "text",
-      "id": "checkout_button_text",
-      "default": "🚀 Checkout",
-      "label": "Checkout button text"
-    }
-  ]
-}
-{% endschema %}
