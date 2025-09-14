@@ -1,0 +1,62 @@
+{% comment %}
+  Announcement Bar Section
+{% endcomment %}
+
+<div class="announcement-bar">
+  <div class="announcement-bar__content">
+    <span class="announcement-bar__text">🐾 Free shipping on orders over $50! Shop now for your furry friend! 🐕</span>
+  </div>
+</div>
+
+<style>
+  .announcement-bar {
+    background: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .announcement-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shimmer 3s infinite;
+  }
+
+  .announcement-bar__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .announcement-bar__link,
+  .announcement-bar__text {
+    color: inherit;
+    text-decoration: none;
+    display: block;
+    transition: opacity 0.3s ease;
+  }
+
+  .announcement-bar__link:hover {
+    opacity: 0.8;
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  @media (max-width: 768px) {
+    .announcement-bar {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+</style>
+

@@ -1,0 +1,105 @@
+{% comment %}
+  Page Template
+{% endcomment %}
+
+<div class="page-width">
+  <div class="container">
+    <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+      <a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t | default: 'Home' }}</a>
+      <span class="breadcrumb__separator"> › </span>
+      <span class="breadcrumb__current">{{ page.title }}</span>
+    </nav>
+
+    <div class="page-header">
+      <h1 class="page-title">{{ page.title }}</h1>
+    </div>
+
+    <div class="page-content rte">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+<style>
+  .page-width {
+    padding: 4rem 0;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .page-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  .page-content {
+    max-width: 800px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+
+  .rte h1,
+  .rte h2,
+  .rte h3,
+  .rte h4,
+  .rte h5,
+  .rte h6 {
+    color: var(--primary-color);
+    margin: 2rem 0 1rem;
+  }
+
+  .rte p {
+    margin-bottom: 1.5rem;
+  }
+
+  .rte a {
+    color: var(--primary-color);
+    text-decoration: underline;
+  }
+
+  .rte a:hover {
+    color: var(--text-dark);
+  }
+
+  .rte ul,
+  .rte ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+
+  .rte li {
+    margin-bottom: 0.5rem;
+  }
+
+  .rte img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    margin: 2rem 0;
+  }
+
+  .rte blockquote {
+    background: var(--secondary-color);
+    padding: 2rem;
+    border-radius: 15px;
+    border-left: 4px solid var(--primary-color);
+    margin: 2rem 0;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 2rem;
+    }
+    
+    .page-content {
+      font-size: 1rem;
+    }
+  }
+</style>

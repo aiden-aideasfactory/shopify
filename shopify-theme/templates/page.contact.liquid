@@ -1,0 +1,362 @@
+{% comment %}
+  Contact Page Template
+{% endcomment %}
+
+<div class="contact-page">
+  <div class="container">
+    <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+      <a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a>
+      <span class="breadcrumb__separator"> › </span>
+      <span class="breadcrumb__current">{{ page.title }}</span>
+    </nav>
+
+    <div class="page-header">
+      <h1 class="page-title">{{ page.title }}</h1>
+      {%- if page.content != blank -%}
+        <div class="page-description">{{ page.content }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="contact-content">
+      <div class="contact-form-wrapper">
+        <h2>Send us a message 🐕</h2>
+        
+        {%- form 'contact', class: 'contact-form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="form-success">
+              <div class="success-message">
+                <span class="success-icon">🎉</span>
+                <h3>Thanks for reaching out!</h3>
+                <p>We'll get back to you soon. Your furry friend will love what we have in store!</p>
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if form.errors -%}
+            <div class="form-errors">
+              <h3>Please fix the following errors:</h3>
+              <ul>
+                {%- for field in form.errors -%}
+                  <li>
+                    {%- if field == 'form' -%}
+                      {{ form.errors.messages[field] }}
+                    {%- else -%}
+                      {{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}
+                    {%- endif -%}
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+
+          <div class="form-row">
+            <div class="form-field">
+              <label for="ContactFormName">Name *</label>
+              <input
+                type="text"
+                id="ContactFormName"
+                name="contact[name]"
+                class="form-input"
+                value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+                required
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="ContactFormEmail">Email *</label>
+              <input
+                type="email"
+                id="ContactFormEmail"
+                name="contact[email]"
+                class="form-input"
+                value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                required
+              >
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="ContactFormPhone">Phone</label>
+            <input
+              type="tel"
+              id="ContactFormPhone"
+              name="contact[phone]"
+              class="form-input"
+              value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.default_address.phone }}{% endif %}"
+            >
+          </div>
+
+          <div class="form-field">
+            <label for="ContactFormSubject">Subject</label>
+            <select id="ContactFormSubject" name="contact[subject]" class="form-select">
+              <option value="General Inquiry">General Inquiry</option>
+              <option value="Product Question">Product Question</option>
+              <option value="Order Support">Order Support</option>
+              <option value="Return/Exchange">Return/Exchange</option>
+              <option value="Wholesale Inquiry">Wholesale Inquiry</option>
+              <option value="Partnership">Partnership Opportunity</option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label for="ContactFormMessage">Message *</label>
+            <textarea
+              id="ContactFormMessage"
+              name="contact[body]"
+              class="form-textarea"
+              placeholder="Tell us about your pup and how we can help! 🐾"
+              required
+            >{% if form.body %}{{ form.body }}{% endif %}</textarea>
+          </div>
+
+          <div class="form-field">
+            <button type="submit" class="btn contact-submit">
+              Send Message 📧
+            </button>
+          </div>
+        {%- endform -%}
+      </div>
+
+      <div class="contact-info">
+        <div class="contact-card">
+          <div class="contact-card-icon">📍</div>
+          <h3>Visit Our Store</h3>
+          <p>123 Dog Lover Lane<br>
+          Pet Paradise City, PC 12345</p>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-icon">📞</div>
+          <h3>Call Us</h3>
+          <p><a href="tel:+1234567890">(123) 456-7890</a><br>
+          Mon-Fri: 9AM-6PM PST</p>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-icon">✉️</div>
+          <h3>Email Us</h3>
+          <p><a href="mailto:hello@pawstore.com">hello@pawstore.com</a><br>
+          We reply within 24 hours!</p>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-card-icon">📱</div>
+          <h3>Follow Us</h3>
+          <div class="social-links">
+            {%- if settings.social_facebook_link != blank -%}
+              <a href="{{ settings.social_facebook_link }}" target="_blank" rel="noopener">Facebook</a>
+            {%- endif -%}
+            {%- if settings.social_instagram_link != blank -%}
+              <a href="{{ settings.social_instagram_link }}" target="_blank" rel="noopener">Instagram</a>
+            {%- endif -%}
+            {%- if settings.social_twitter_link != blank -%}
+              <a href="{{ settings.social_twitter_link }}" target="_blank" rel="noopener">Twitter</a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .contact-page {
+    padding: 4rem 0;
+  }
+
+  .page-description {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 1rem auto 0;
+  }
+
+  .contact-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 4rem;
+    margin-top: 4rem;
+  }
+
+  .contact-form-wrapper {
+    background: white;
+    padding: 3rem;
+    border-radius: 30px;
+    box-shadow: 0 10px 40px rgba(83, 41, 166, 0.1);
+    border: 3px solid var(--secondary-color);
+  }
+
+  .contact-form-wrapper h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .form-success {
+    background: linear-gradient(135deg, var(--success-color), #27ae60);
+    color: white;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .success-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .success-message h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-errors {
+    background: var(--error-color);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+  }
+
+  .form-errors ul {
+    margin: 1rem 0 0;
+    padding-left: 1rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-field {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--secondary-color);
+    border-radius: 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(83, 41, 166, 0.1);
+  }
+
+  .form-textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .contact-submit {
+    width: 100%;
+    font-size: 1.2rem;
+    padding: 1.2rem 2rem;
+  }
+
+  .contact-info {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .contact-card {
+    background: var(--secondary-color);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(83, 41, 166, 0.15);
+  }
+
+  .contact-card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .contact-card h3 {
+    font-size: 1.3rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  .contact-card p {
+    color: var(--text-dark);
+    line-height: 1.6;
+  }
+
+  .contact-card a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .contact-card a:hover {
+    text-decoration: underline;
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .social-links a {
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 15px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+  }
+
+  .social-links a:hover {
+    background: var(--text-dark);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .contact-content {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .contact-form-wrapper {
+      padding: 2rem;
+    }
+
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-info {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

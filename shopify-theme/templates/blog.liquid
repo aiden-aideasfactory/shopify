@@ -1,0 +1,227 @@
+{% comment %}
+  Blog Template
+{% endcomment %}
+
+{%- paginate blog.articles by 6 -%}
+  <div class="blog-page">
+    <div class="container">
+      <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+        <a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t | default: 'Home' }}</a>
+        <span class="breadcrumb__separator"> › </span>
+        <span class="breadcrumb__current">{{ blog.title }}</span>
+      </nav>
+
+      <header class="blog-header">
+        <h1 class="blog-title">{{ blog.title }}</h1>
+        {%- if blog.summary != blank -%}
+          <p class="blog-description">{{ blog.summary }}</p>
+        {%- endif -%}
+      </header>
+
+      {%- if blog.articles.size > 0 -%}
+        <div class="blog-articles">
+          {%- for article in blog.articles -%}
+            <article class="article-card">
+              {%- if article.image -%}
+                <div class="article-card__image">
+                  <a href="{{ article.url }}">
+                    {{ article.image | image_url: width: 600 | image_tag:
+                      loading: 'lazy',
+                      alt: article.image.alt | escape
+                    }}
+                  </a>
+                </div>
+              {%- endif -%}
+              
+              <div class="article-card__content">
+                <h2 class="article-card__title">
+                  <a href="{{ article.url }}">{{ article.title }}</a>
+                </h2>
+                
+                <div class="article-card__meta">
+                  <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">
+                    {{ article.published_at | date: format: 'month_day_year' }}
+                  </time>
+                  {%- if article.author != blank -%}
+                    <span class="article-card__author">by {{ article.author }}</span>
+                  {%- endif -%}
+                </div>
+                
+                {%- if article.excerpt != blank -%}
+                  <div class="article-card__excerpt">
+                    {{ article.excerpt }}
+                  </div>
+                {%- else -%}
+                  <div class="article-card__excerpt">
+                    {{ article.content | strip_html | truncate: 150 }}
+                  </div>
+                {%- endif -%}
+                
+                <a href="{{ article.url }}" class="article-card__read-more">
+                  {{ 'blogs.article.read_more' | t | default: 'Read more' }}
+                </a>
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" role="navigation" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">
+                {{ 'general.pagination.previous' | t | default: 'Previous' }}
+              </a>
+            {%- endif -%}
+
+            {%- for part in paginate.parts -%}
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
+              {%- else -%}
+                {%- if part.title == paginate.current_page -%}
+                  <span class="pagination__item pagination__item--current">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="pagination__item">{{ part.title }}</span>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next">
+                {{ 'general.pagination.next' | t | default: 'Next' }}
+              </a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- else -%}
+        <div class="blog-empty">
+          <div class="empty-state">
+            <h2>{{ 'blogs.general.no_articles' | t | default: 'No articles yet' }}</h2>
+            <p>{{ 'blogs.general.no_articles_text' | t | default: 'Check back soon for updates!' }}</p>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endpaginate -%}
+
+<style>
+  .blog-page {
+    padding: 4rem 0;
+  }
+
+  .blog-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .blog-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  .blog-description {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .blog-articles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .article-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(83, 41, 166, 0.1);
+    transition: all 0.4s ease;
+  }
+
+  .article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(83, 41, 166, 0.15);
+  }
+
+  .article-card__image {
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .article-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .article-card:hover .article-card__image img {
+    transform: scale(1.1);
+  }
+
+  .article-card__content {
+    padding: 2rem;
+  }
+
+  .article-card__title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .article-card__title a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+
+  .article-card__title a:hover {
+    color: var(--text-dark);
+  }
+
+  .article-card__meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+
+  .article-card__excerpt {
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .article-card__read-more {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .article-card__read-more:hover {
+    text-decoration: underline;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .blog-title {
+      font-size: 2rem;
+    }
+    
+    .blog-articles {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

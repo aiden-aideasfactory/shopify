@@ -1,0 +1,342 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "PawStore Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "PawStore Team",
+    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
+    "theme_support_url": "https://support.shopify.com/"
+  },
+  {
+    "name": "Brand Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Primary Colors"
+      },
+      {
+        "type": "color",
+        "id": "primary_color",
+        "label": "Primary Color",
+        "default": "#5329a6"
+      },
+      {
+        "type": "color",
+        "id": "secondary_color",
+        "label": "Secondary Color",
+        "default": "#f5f0e6"
+      },
+      {
+        "type": "color",
+        "id": "text_dark",
+        "label": "Dark Text",
+        "default": "#2c2c2c"
+      },
+      {
+        "type": "color",
+        "id": "text_light",
+        "label": "Light Text",
+        "default": "#666666"
+      },
+      {
+        "type": "header",
+        "content": "Accent Colors"
+      },
+      {
+        "type": "color",
+        "id": "accent_success",
+        "label": "Success Color",
+        "default": "#2ed573"
+      },
+      {
+        "type": "color",
+        "id": "accent_warning",
+        "label": "Warning Color",
+        "default": "#ffa502"
+      },
+      {
+        "type": "color",
+        "id": "accent_error",
+        "label": "Error Color",
+        "default": "#ff4757"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Heading font",
+        "default": "helvetica_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body font",
+        "default": "helvetica_n4"
+      },
+      {
+        "type": "range",
+        "id": "font_size_base",
+        "min": 14,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "label": "Base font size",
+        "default": 16
+      }
+    ]
+  },
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "text",
+        "id": "header_logo_text",
+        "label": "Logo Text",
+        "default": "🐕 PawStore"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 50,
+        "max": 250,
+        "step": 10,
+        "default": 150,
+        "unit": "px",
+        "label": "Logo width"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_search",
+        "label": "Show search bar",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "sticky_header",
+        "label": "Enable sticky header",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Drawer"
+          },
+          {
+            "value": "page",
+            "label": "Page"
+          },
+          {
+            "value": "modal",
+            "label": "Modal"
+          }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_show_vendor",
+        "label": "Show product vendor",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_notes_enable",
+        "label": "Enable cart notes",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Products",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "product_show_vendor",
+        "label": "Show vendor",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "product_show_sku",
+        "label": "Show SKU",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "product_show_saved_amount",
+        "label": "Show saved amount",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "product_image_size",
+        "label": "Product image size",
+        "options": [
+          {
+            "value": "small",
+            "label": "Small"
+          },
+          {
+            "value": "medium",
+            "label": "Medium"
+          },
+          {
+            "value": "large",
+            "label": "Large"
+          }
+        ],
+        "default": "medium"
+      }
+    ]
+  },
+  {
+    "name": "Collections",
+    "settings": [
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "min": 12,
+        "max": 48,
+        "step": 6,
+        "label": "Products per page",
+        "default": 24
+      },
+      {
+        "type": "select",
+        "id": "collection_layout",
+        "label": "Collection layout",
+        "options": [
+          {
+            "value": "grid",
+            "label": "Grid"
+          },
+          {
+            "value": "list",
+            "label": "List"
+          }
+        ],
+        "default": "grid"
+      },
+      {
+        "type": "checkbox",
+        "id": "collection_show_filters",
+        "label": "Show filters",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "collection_show_sort",
+        "label": "Show sorting",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Social accounts"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter_link",
+        "label": "Twitter",
+        "info": "https://twitter.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook",
+        "info": "https://facebook.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram",
+        "info": "https://instagram.com/shopify"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube_link",
+        "label": "YouTube",
+        "info": "https://youtube.com/shopify"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "32 x 32px .png recommended"
+      }
+    ]
+  },
+  {
+    "name": "Newsletter",
+    "settings": [
+      {
+        "type": "text",
+        "id": "newsletter_heading",
+        "label": "Newsletter heading",
+        "default": "Join the Pack! 🐕‍🦺"
+      },
+      {
+        "type": "text",
+        "id": "newsletter_subheading",
+        "label": "Newsletter subheading",
+        "default": "Get exclusive dog deals, new arrivals, and pup care tips delivered to your inbox"
+      },
+      {
+        "type": "text",
+        "id": "newsletter_button_text",
+        "label": "Button text",
+        "default": "✨ Subscribe"
+      }
+    ]
+  },
+  {
+    "name": "Footer",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_footer_newsletter",
+        "label": "Show newsletter signup",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "footer_copyright",
+        "label": "Copyright text",
+        "default": "© 2025 PawStore. Made with 🐾 and lots of ☕ for dog lovers everywhere"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_payment_icons",
+        "label": "Show payment icons",
+        "default": true
+      }
+    ]
+  }
+]

@@ -1,0 +1,134 @@
+{% comment %}
+  Product Card Snippet
+  Accepts:
+  - product: {Object} Product object
+  - show_vendor: {Boolean} Show product vendor
+  - show_rating: {Boolean} Show product rating
+  - show_quick_add: {Boolean} Show quick add button
+{% endcomment %}
+
+{%- liquid
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  
+  assign product_form_id = 'product-form-' | append: product.id
+-%}
+
+<div class="product-card" 
+     data-product-card
+     data-product-id="{{ product.id }}"
+     data-product-handle="{{ product.handle }}"
+     data-price="{{ product.price | money_without_currency }}"
+     data-title="{{ product.title | escape }}"
+     data-created="{{ product.created_at }}"
+     data-product-tags="{{ product.tags | join: ',' }}">
+  
+  <a href="{{ product.url }}" class="product-card__link">
+    <div class="product-card__image-wrapper">
+      {%- if product.featured_image != blank -%}
+        {{ product.featured_image | image_url: width: 500 | image_tag:
+          loading: 'lazy',
+          class: 'product-card__image',
+          alt: product.featured_image.alt | escape
+        }}
+        
+        {%- if product.media[1] != blank -%}
+          {{ product.media[1] | image_url: width: 500 | image_tag:
+            loading: 'lazy',
+            class: 'product-card__image product-card__image--secondary',
+            alt: product.media[1].alt | escape
+          }}
+        {%- endif -%}
+      {%- else -%}
+        <div class="product-card__placeholder">
+          {{ product.title | truncate: 20 }}
+        </div>
+      {%- endif -%}
+      
+      {%- if on_sale -%}
+        <div class="product-badge product-badge--sale">
+          {{ 'products.product.on_sale' | t | default: 'Sale' }}
+        </div>
+      {%- elsif product.tags contains 'new' -%}
+        <div class="product-badge product-badge--new">
+          {{ 'products.product.new' | t | default: 'New' }}
+        </div>
+      {%- endif -%}
+      
+      {%- if show_quick_add -%}
+        <button type="button" 
+                class="product-card__quick-view"
+                data-quick-view
+                data-product-handle="{{ product.handle }}">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            <path d="M10 4.5C5 4.5 1 10 1 10s4 5.5 9 5.5 9-5.5 9-5.5-4-5.5-9-5.5z" stroke="currentColor" fill="none"/>
+            <circle cx="10" cy="10" r="2.5" stroke="currentColor" fill="none"/>
+          </svg>
+          <span class="visually-hidden">{{ 'products.product.quick_view' | t | default: 'Quick view' }}</span>
+        </button>
+      {%- endif -%}
+    </div>
+  </a>
+  
+  <div class="product-card__info">
+    {%- if show_vendor and product.vendor != blank -%}
+      <div class="product-card__vendor">{{ product.vendor }}</div>
+    {%- endif -%}
+    
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h3>
+    
+    {%- if show_rating -%}
+      <div class="product-card__rating">
+        {%- render 'product-rating', product: product -%}
+      </div>
+    {%- endif -%}
+    
+    <div class="product-card__price">
+      <span class="price__regular">
+        <span class="visually-hidden">{{ 'products.product.price.regular_price' | t | default: 'Regular price' }}</span>
+        {%- if on_sale -%}
+          <span class="price__sale">{{ product.price | money }}</span>
+        {%- else -%}
+          {{ product.price | money }}
+        {%- endif -%}
+      </span>
+      
+      {%- if on_sale -%}
+        <span class="price__compare">
+          <span class="visually-hidden">{{ 'products.product.price.sale_price' | t | default: 'Sale price' }}</span>
+          {{ product.compare_at_price | money }}
+        </span>
+      {%- endif -%}
+    </div>
+    
+    {%- if show_quick_add -%}
+      <product-form class="product-card__form">
+        {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" disabled>
+          
+          {%- if product.available -%}
+            <button type="submit" 
+                    name="add" 
+                    class="product-card__add-button add-to-cart"
+                    aria-label="{{ 'products.product.add_to_cart' | t | default: 'Add to cart' }}"
+                    {%- unless product.selected_or_first_available_variant.available -%}disabled{%- endunless -%}>
+              {%- if product.selected_or_first_available_variant.available -%}
+                {{ 'products.product.add_to_cart' | t | default: '🛒 Add to Cart' }}
+              {%- else -%}
+                {{ 'products.product.sold_out' | t | default: 'Sold Out' }}
+              {%- endif -%}
+            </button>
+          {%- else -%}
+            <button type="button" class="product-card__add-button add-to-cart" disabled>
+              {{ 'products.product.unavailable' | t | default: 'Unavailable' }}
+            </button>
+          {%- endif -%}
+        {%- endform -%}
+      </product-form>
+    {%- endif -%}
+  </div>
+</div>

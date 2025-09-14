@@ -1,0 +1,220 @@
+{% comment %}
+  Hero Section with animated shapes and stickers
+{% endcomment %}
+
+<section class="hero" id="hero-{{ section.id }}">
+  {%- if section.settings.show_stickers -%}
+    <div class="sticker sticker-1">{{ section.settings.sticker_1_text }}</div>
+    <div class="sticker sticker-2">{{ section.settings.sticker_2_text }}</div>
+    <div class="sticker sticker-3">{{ section.settings.sticker_3_text }}</div>
+  {%- endif -%}
+  
+  <div class="container">
+    <div class="hero-content">
+      {%- if section.settings.heading != blank -%}
+        <h1 class="hero__heading">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+      
+      {%- if section.settings.subheading != blank -%}
+        <p class="hero__subheading">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+      
+      {%- if section.settings.button_label != blank -%}
+        <a href="{{ section.settings.button_link }}" class="btn hero__button">
+          {{ section.settings.button_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  #hero-{{ section.id }} {
+    background: {{ section.settings.background_color | default: settings.secondary_color }};
+    padding: {{ section.settings.padding_top }}rem 0 {{ section.settings.padding_bottom }}rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #hero-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 100px;
+    height: 100px;
+    background: var(--accent-gradient);
+    border-radius: 50% 20% 50% 20%;
+    opacity: 0.7;
+    animation: morph 6s ease-in-out infinite;
+  }
+
+  #hero-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    right: 15%;
+    width: 80px;
+    height: 80px;
+    background: var(--primary-color);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    opacity: 0.8;
+    animation: bounce 4s ease-in-out infinite;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 10;
+  }
+
+  .hero__heading {
+    font-size: {{ section.settings.heading_size }}rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+  }
+
+  .hero__subheading {
+    font-size: {{ section.settings.subheading_size }}rem;
+    margin-bottom: 2rem;
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+
+  .hero__button {
+    font-size: {{ section.settings.button_size }}rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero__heading {
+      font-size: calc({{ section.settings.heading_size }}rem * 0.7);
+    }
+    
+    .hero__subheading {
+      font-size: calc({{ section.settings.subheading_size }}rem * 0.9);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "section-hero",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "🐾 Spoil Your Best Friend"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 2,
+      "max": 6,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Heading size",
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Premium dog products that make tails wag with joy 🐕"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Subheading size",
+      "default": 1.4
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "🛍️ Shop for Dogs"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "range",
+      "id": "button_size",
+      "min": 0.8,
+      "max": 1.5,
+      "step": 0.1,
+      "unit": "rem",
+      "label": "Button size",
+      "default": 1.1
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stickers",
+      "label": "Show stickers",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sticker_1_text",
+      "label": "Sticker 1 text",
+      "default": "🐾 NEW!"
+    },
+    {
+      "type": "text",
+      "id": "sticker_2_text",
+      "label": "Sticker 2 text",
+      "default": "🦴 HOT"
+    },
+    {
+      "type": "text",
+      "id": "sticker_3_text",
+      "label": "Sticker 3 text",
+      "default": "🐕 SALE!"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Padding top",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 10,
+      "step": 0.5,
+      "unit": "rem",
+      "label": "Padding bottom",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "category": "Hero"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,46 @@
+{
+  "current": {
+    "primary_color": "#5329a6",
+    "secondary_color": "#f5f0e6",
+    "text_dark": "#2c2c2c",
+    "text_light": "#666666",
+    "accent_success": "#2ed573",
+    "accent_warning": "#ffa502",
+    "accent_error": "#ff4757",
+    "type_header_font": "helvetica_n4",
+    "type_body_font": "helvetica_n4",
+    "font_size_base": 16,
+    "header_logo_text": "🐕 PawStore",
+    "logo_width": 150,
+    "show_search": true,
+    "sticky_header": true,
+    "cart_type": "drawer",
+    "cart_show_vendor": false,
+    "cart_notes_enable": true,
+    "product_show_vendor": false,
+    "product_show_sku": false,
+    "product_show_saved_amount": true,
+    "product_image_size": "medium",
+    "products_per_page": 24,
+    "collection_layout": "grid",
+    "collection_show_filters": true,
+    "collection_show_sort": true,
+    "newsletter_heading": "Join the Pack! 🐕‍🦺",
+    "newsletter_subheading": "Get exclusive dog deals, new arrivals, and pup care tips delivered to your inbox",
+    "newsletter_button_text": "✨ Subscribe",
+    "show_footer_newsletter": true,
+    "footer_copyright": "© 2025 PawStore. Made with 🐾 and lots of ☕ for dog lovers everywhere",
+    "show_payment_icons": true,
+    "sections": {
+      "header": {
+        "type": "header",
+        "settings": {}
+      },
+      "footer": {
+        "type": "footer",
+        "settings": {}
+      }
+    },
+    "content_for_index": []
+  }
+}

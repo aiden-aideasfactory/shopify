@@ -1,0 +1,293 @@
+{% comment %}
+  Product Template
+{% endcomment %}
+
+{%- assign product_form_installment_id = 'product-form-installment-' | append: product.id -%}
+
+<div class="product-page">
+  <div class="container">
+    <nav class="breadcrumb" role="navigation" aria-label="breadcrumbs">
+      <a href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t | default: 'Home' }}</a>
+      <span class="breadcrumb__separator"> › </span>
+      <a href="{{ collections.all.url }}">{{ 'general.breadcrumbs.products' | t | default: 'Products' }}</a>
+      <span class="breadcrumb__separator"> › </span>
+      <span class="breadcrumb__current">{{ product.title }}</span>
+    </nav>
+
+    <div class="product">
+      <div class="product__media">
+        {%- if product.media.size > 0 -%}
+          <div class="product__media-list">
+            {%- for media in product.media -%}
+              <div class="product__media-item{% if forloop.first %} product__media-item--active{% endif %}" 
+                   data-media-id="{{ media.id }}">
+                {%- case media.media_type -%}
+                  {%- when 'image' -%}
+                    {{ media | image_url: width: 800 | image_tag:
+                      loading: 'lazy',
+                      class: 'product__media-image',
+                      alt: media.alt | escape
+                    }}
+                  {%- when 'video' -%}
+                    <video controls class="product__media-video">
+                      <source src="{{ media.sources[1].url }}" type="{{ media.sources[1].mime_type }}">
+                      <source src="{{ media.sources[0].url }}" type="{{ media.sources[0].mime_type }}">
+                    </video>
+                  {%- when 'external_video' -%}
+                    <div class="product__media-video">
+                      {{ media | external_video_tag }}
+                    </div>
+                  {%- when 'model' -%}
+                    <div class="product__media-model">
+                      {{ media | model_viewer_tag }}
+                    </div>
+                {%- endcase -%}
+              </div>
+            {%- endfor -%}
+          </div>
+          
+          {%- if product.media.size > 1 -%}
+            <div class="product__media-thumbs">
+              {%- for media in product.media -%}
+                <button type="button" 
+                        class="product__media-thumb{% if forloop.first %} product__media-thumb--active{% endif %}"
+                        data-media-id="{{ media.id }}"
+                        aria-label="Load media {{ forloop.index }}">
+                  {%- if media.media_type == 'image' -%}
+                    {{ media | image_url: width: 100 | image_tag:
+                      loading: 'lazy',
+                      alt: media.alt | escape
+                    }}
+                  {%- else -%}
+                    {{ media.preview_image | image_url: width: 100 | image_tag:
+                      loading: 'lazy',
+                      alt: media.preview_image.alt | escape
+                    }}
+                  {%- endif -%}
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <div class="product__media-placeholder">
+            {{ 'product.media.placeholder' | t | default: 'No image available' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="product__info">
+        {%- if product.vendor != blank and settings.product_show_vendor -%}
+          <div class="product__vendor">{{ product.vendor }}</div>
+        {%- endif -%}
+
+        <h1 class="product__title">{{ product.title }}</h1>
+
+        <div class="product__price">
+          <span class="price" id="price-{{ section.id }}">
+            {%- assign product_price = product.selected_or_first_available_variant.price -%}
+            {%- assign product_compare_price = product.selected_or_first_available_variant.compare_at_price -%}
+            
+            {%- if product_compare_price > product_price -%}
+              <span class="price__sale">{{ product_price | money }}</span>
+              <span class="price__compare">{{ product_compare_price | money }}</span>
+            {%- else -%}
+              {{ product_price | money }}
+            {%- endif -%}
+          </span>
+        </div>
+
+        {%- if product.description != blank -%}
+          <div class="product__description">
+            {{ product.description }}
+          </div>
+        {%- endif -%}
+
+        {%- unless product.has_only_default_variant -%}
+          <variant-selects class="product__variants" data-section="{{ section.id }}" data-url="{{ product.url }}">
+            {%- for option in product.options_with_values -%}
+              <div class="product-form__input product-form__input--dropdown">
+                <label class="form__label" for="Option-{{ forloop.index0 }}-{{ section.id }}">
+                  {{ option.name }}
+                </label>
+                <div class="select">
+                  <select
+                    id="Option-{{ forloop.index0 }}-{{ section.id }}"
+                    class="select__select"
+                    name="options[{{ option.name | escape }}]"
+                    form="{{ product_form_id }}"
+                  >
+                    {%- for value in option.values -%}
+                      <option 
+                        value="{{ value | escape }}"
+                        {%- if option.selected_value == value %} selected="selected"{% endif -%}
+                      >
+                        {{ value }}
+                      </option>
+                    {%- endfor -%}
+                  </select>
+                  <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="m9.354.646a.5.5 0 0 0-.708 0L5 4.293 1.354.646a.5.5 0 0 0-.708.708l4 4a.5.5 0 0 0 .708 0l4-4a.5.5 0 0 0 0-.708z" fill="currentColor">
+                  </svg>
+                </div>
+              </div>
+            {%- endfor -%}
+
+            <script type="application/json">
+              {{ product.variants | json }}
+            </script>
+          </variant-selects>
+        {%- endunless -%}
+
+        {%- assign product_form_id = 'product-form-' | append: section.id -%}
+
+        <product-form class="product-form">
+          <div class="product-form__error-message-wrapper" role="alert" hidden>
+            <span class="product-form__error-message"></span>
+          </div>
+
+          {%- form 'product',
+            product,
+            id: product_form_id,
+            class: 'form',
+            novalidate: 'novalidate',
+            data-type: 'add-to-cart-form'
+          -%}
+            <input
+              type="hidden"
+              name="id"
+              value="{{ product.selected_or_first_available_variant.id }}"
+            >
+
+            <div class="product-form__buttons">
+              <div class="product-form__item product-form__item--quantity">
+                <label class="form__label" for="Quantity-{{ section.id }}">
+                  {{ 'products.product.quantity.label' | t | default: 'Quantity' }}
+                </label>
+                <quantity-input class="quantity">
+                  <button class="quantity__button no-js-hidden" name="minus" type="button">
+                    <span class="visually-hidden">
+                      {{- 'products.product.quantity.decrease' | t: product: product.title | escape -}}
+                    </span>
+                    <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 10 2">
+                      <path fill="currentColor" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 1 1 0 1H1A.5.5 0 0 1 .5 1Z"/>
+                    </svg>
+                  </button>
+                  <input
+                    class="quantity__input"
+                    type="number"
+                    name="quantity"
+                    id="Quantity-{{ section.id }}"
+                    min="1"
+                    value="1"
+                    form="{{ product_form_id }}"
+                  >
+                  <button class="quantity__button no-js-hidden" name="plus" type="button">
+                    <span class="visually-hidden">
+                      {{- 'products.product.quantity.increase' | t: product: product.title | escape -}}
+                    </span>
+                    <svg class="icon" aria-hidden="true" focusable="false" viewBox="0 0 10 10">
+                      <path fill="currentColor" d="M6 4h3a1 1 0 0 1 0 2H6v3a1 1 0 0 1-2 0V6H1a1 1 0 0 1 0-2h3V1a1 1 0 1 1 2 0v3Z"/>
+                    </svg>
+                  </button>
+                </quantity-input>
+              </div>
+
+              <button
+                id="ProductSubmitButton-{{ section.id }}"
+                type="submit"
+                name="add"
+                class="product-form__cart-submit btn"
+                {%- if product.selected_or_first_available_variant.available == false %} disabled{% endif -%}
+              >
+                <span>
+                  {%- if product.selected_or_first_available_variant.available -%}
+                    {{ 'products.product.add_to_cart' | t | default: '🛒 Add to Cart' }}
+                  {%- else -%}
+                    {{ 'products.product.sold_out' | t | default: 'Sold Out' }}
+                  {%- endif -%}
+                </span>
+                <div class="loading-overlay__spinner hidden">
+                  <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66">
+                    <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                  </svg>
+                </div>
+              </button>
+            </div>
+          {%- endform -%}
+        </product-form>
+
+        {%- if product.selected_or_first_available_variant.available and settings.product_show_saved_amount -%}
+          {%- assign compare_at_price = product.selected_or_first_available_variant.compare_at_price -%}
+          {%- assign price = product.selected_or_first_available_variant.price -%}
+          {%- if compare_at_price > price -%}
+            <div class="product__savings">
+              {{ 'products.product.save_money' | t: amount: compare_at_price | minus: price | money }}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+
+        {%- if product.tags.size > 0 -%}
+          <div class="product__tags">
+            <strong>Tags:</strong>
+            {%- for tag in product.tags -%}
+              <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="product__tag">{{ tag }}</a>
+              {%- unless forloop.last -%}, {%- endunless -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- liquid
+  if product.selected_or_first_available_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign available = target.available | default: false
+  assign money_price = price | money
+  if settings.currency_code_enabled
+    assign money_price = price | money_with_currency
+  endif
+  if target == product and product.price_varies
+    assign money_price = 'products.product.price.from_price_html' | t: price: money_price
+  endif
+-%}
+
+<script type="application/json" id="ProductJson-{{ section.id }}">
+  {{ product | json }}
+</script>
+
+<script type="application/json" id="ModelJson-{{ section.id }}">
+  {{ product.media | where: 'media_type', 'model' | json }}
+</script>
+
+{% schema %}
+{
+  "name": "Product information",
+  "tag": "section",
+  "class": "section-product",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_info",
+      "default": true,
+      "label": "Enable sticky product info"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "default": false,
+      "label": "Enable video looping"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,263 @@
+{% comment %}
+  404 Error Template
+{% endcomment %}
+
+<div class="error-page">
+  <div class="container">
+    <div class="error-content">
+      <div class="error-animation">
+        <div class="error-dog">🐕</div>
+        <div class="error-number">404</div>
+        <div class="floating-bones">
+          <div class="bone">🦴</div>
+          <div class="bone">🦴</div>
+          <div class="bone">🦴</div>
+        </div>
+      </div>
+      
+      <h1 class="error-title">{{ 'general.404.title' | t | default: 'Oops! Page Not Found' }}</h1>
+      
+      <p class="error-message">
+        {{ 'general.404.subtext' | t | default: 'The page you were looking for doesn\'t exist. You may have mistyped the address or the page may have moved.' }}
+      </p>
+      
+      <div class="error-actions">
+        <a href="{{ routes.root_url }}" class="btn error-home-btn">
+          {{ 'general.404.link' | t | default: '🏠 Go Home' }}
+        </a>
+        
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--secondary">
+          {{ 'general.404.shop' | t | default: '🛍️ Shop All Products' }}
+        </a>
+      </div>
+      
+      <div class="error-search">
+        <p class="error-search-text">{{ 'general.404.search_text' | t | default: 'Or search for what you\'re looking for:' }}</p>
+        <form action="{{ routes.search_url }}" method="get" class="error-search-form">
+          <div class="search-form__input-wrapper">
+            <input
+              type="search"
+              name="q"
+              class="search-form__input"
+              placeholder="{{ 'general.search.placeholder' | t | default: 'Search products...' }}"
+              aria-label="{{ 'general.search.search' | t | default: 'Search' }}"
+            >
+            <button type="submit" class="search-form__submit" aria-label="{{ 'general.search.submit' | t | default: 'Search' }}">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="2"/>
+                <path d="M14 14L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .error-page {
+    padding: 6rem 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, var(--secondary-color) 0%, rgba(245, 240, 230, 0.3) 100%);
+  }
+
+  .error-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .error-animation {
+    position: relative;
+    margin-bottom: 3rem;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .error-dog {
+    font-size: 4rem;
+    animation: bounce 2s ease-in-out infinite;
+    z-index: 2;
+    position: relative;
+  }
+
+  .error-number {
+    position: absolute;
+    font-size: 8rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    opacity: 0.3;
+    z-index: 1;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  .floating-bones {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+
+  .bone {
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.6;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .bone:nth-child(1) {
+    top: 20%;
+    left: 20%;
+    animation-delay: 0s;
+  }
+
+  .bone:nth-child(2) {
+    top: 60%;
+    right: 15%;
+    animation-delay: 1s;
+  }
+
+  .bone:nth-child(3) {
+    bottom: 30%;
+    left: 10%;
+    animation-delay: 2s;
+  }
+
+  .error-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .error-message {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+
+  .error-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .error-home-btn {
+    transform: rotate(-1deg);
+  }
+
+  .error-home-btn:hover {
+    transform: rotate(0deg) scale(1.05);
+  }
+
+  .error-search {
+    margin-top: 3rem;
+  }
+
+  .error-search-text {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .error-search-form {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .search-form__input-wrapper {
+    position: relative;
+    display: flex;
+    border: 3px solid var(--primary-color);
+    border-radius: 30px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 15px rgba(83, 41, 166, 0.2);
+  }
+
+  .search-form__input {
+    flex: 1;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    outline: none;
+    font-size: 1rem;
+  }
+
+  .search-form__submit {
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @keyframes bounce {
+    0%, 100% { 
+      transform: translateY(0px);
+    }
+    50% { 
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% { 
+      transform: scale(1);
+      opacity: 0.3;
+    }
+    50% { 
+      transform: scale(1.05);
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes float {
+    0%, 100% { 
+      transform: translateY(0px) rotate(0deg);
+    }
+    33% { 
+      transform: translateY(-15px) rotate(120deg);
+    }
+    66% { 
+      transform: translateY(10px) rotate(240deg);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .error-number {
+      font-size: 6rem;
+    }
+    
+    .error-title {
+      font-size: 2rem;
+    }
+    
+    .error-message {
+      font-size: 1rem;
+    }
+    
+    .error-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .error-actions .btn {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+</style>

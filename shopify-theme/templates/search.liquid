@@ -1,0 +1,339 @@
+{% comment %}
+  Search Template
+{% endcomment %}
+
+{%- paginate search.results by 24 -%}
+  <div class="search-page">
+    <div class="container">
+      <div class="search-header">
+        <h1 class="search-title">
+          {%- if search.performed -%}
+            {{ 'general.search.results_for' | t: terms: search.terms }}
+          {%- else -%}
+            {{ 'general.search.title' | t | default: 'Search' }}
+          {%- endif -%}
+        </h1>
+        
+        <div class="search-form-wrapper">
+          <form action="{{ routes.search_url }}" method="get" class="search-form">
+            <div class="search-form__input-wrapper">
+              <input
+                type="search"
+                name="q"
+                id="Search"
+                class="search-form__input"
+                value="{{ search.terms | escape }}"
+                placeholder="{{ 'general.search.placeholder' | t | default: 'Search products, articles, pages...' }}"
+                aria-label="{{ 'general.search.search' | t | default: 'Search' }}"
+                autofocus
+              >
+              <button type="submit" class="search-form__submit" aria-label="{{ 'general.search.submit' | t | default: 'Search' }}">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                  <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {%- if search.performed -%}
+          <div class="search-results-count">
+            {%- if search.results_count == 0 -%}
+              {{ 'general.search.no_results' | t: terms: search.terms }}
+            {%- else -%}
+              {%- assign results_count = search.results_count -%}
+              {{ 'general.search.results_with_count' | t: terms: search.terms, count: results_count }}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if search.performed -%}
+        {%- if search.results.size > 0 -%}
+          <div class="search-results">
+            {%- for item in search.results -%}
+              {%- case item.object_type -%}
+                {%- when 'product' -%}
+                  <div class="search-result search-result--product">
+                    {% render 'product-card',
+                      product: item,
+                      show_vendor: settings.product_show_vendor,
+                      show_rating: false,
+                      show_quick_add: true
+                    %}
+                  </div>
+                
+                {%- when 'article' -%}
+                  <div class="search-result search-result--article">
+                    <article class="article-card">
+                      {%- if item.image -%}
+                        <div class="article-card__image">
+                          <a href="{{ item.url }}">
+                            {{ item.image | image_url: width: 300 | image_tag:
+                              loading: 'lazy',
+                              alt: item.image.alt | escape
+                            }}
+                          </a>
+                        </div>
+                      {%- endif -%}
+                      
+                      <div class="article-card__content">
+                        <div class="article-card__type">
+                          <span class="badge">{{ 'general.search.article' | t | default: 'Article' }}</span>
+                        </div>
+                        
+                        <h3 class="article-card__title">
+                          <a href="{{ item.url }}">{{ item.title }}</a>
+                        </h3>
+                        
+                        <div class="article-card__meta">
+                          <time datetime="{{ item.published_at | date: '%Y-%m-%d' }}">
+                            {{ item.published_at | date: format: 'month_day_year' }}
+                          </time>
+                          {%- if item.author != blank -%}
+                            <span>by {{ item.author }}</span>
+                          {%- endif -%}
+                        </div>
+                        
+                        <div class="article-card__excerpt">
+                          {{ item.content | strip_html | truncate: 150 }}
+                        </div>
+                        
+                        <a href="{{ item.url }}" class="article-card__read-more">
+                          {{ 'blogs.article.read_more' | t | default: 'Read more' }}
+                        </a>
+                      </div>
+                    </article>
+                  </div>
+                
+                {%- when 'page' -%}
+                  <div class="search-result search-result--page">
+                    <div class="page-card">
+                      <div class="page-card__content">
+                        <div class="page-card__type">
+                          <span class="badge">{{ 'general.search.page' | t | default: 'Page' }}</span>
+                        </div>
+                        
+                        <h3 class="page-card__title">
+                          <a href="{{ item.url }}">{{ item.title }}</a>
+                        </h3>
+                        
+                        <div class="page-card__excerpt">
+                          {{ item.content | strip_html | truncate: 150 }}
+                        </div>
+                        
+                        <a href="{{ item.url }}" class="page-card__read-more">
+                          {{ 'general.search.view_page' | t | default: 'View page' }}
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+
+          {%- if paginate.pages > 1 -%}
+            <nav class="pagination" role="navigation" aria-label="Pagination">
+              {%- if paginate.previous -%}
+                <a href="{{ paginate.previous.url }}" class="pagination__item pagination__item--prev">
+                  {{ 'general.pagination.previous' | t | default: 'Previous' }}
+                </a>
+              {%- endif -%}
+
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}
+                  <a href="{{ part.url }}" class="pagination__item">{{ part.title }}</a>
+                {%- else -%}
+                  {%- if part.title == paginate.current_page -%}
+                    <span class="pagination__item pagination__item--current">{{ part.title }}</span>
+                  {%- else -%}
+                    <span class="pagination__item">{{ part.title }}</span>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endfor -%}
+
+              {%- if paginate.next -%}
+                <a href="{{ paginate.next.url }}" class="pagination__item pagination__item--next">
+                  {{ 'general.pagination.next' | t | default: 'Next' }}
+                </a>
+              {%- endif -%}
+            </nav>
+          {%- endif -%}
+        {%- else -%}
+          <div class="search-no-results">
+            <div class="empty-state">
+              <div class="empty-state__icon">🔍</div>
+              <h2>{{ 'general.search.no_results' | t: terms: search.terms }}</h2>
+              <p>{{ 'general.search.no_results_text' | t | default: 'Try different keywords or check your spelling.' }}</p>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        <div class="search-suggestions">
+          <h2>{{ 'general.search.suggestions_title' | t | default: 'Popular searches' }}</h2>
+          <div class="search-suggestions__list">
+            <a href="/collections/all" class="search-suggestion">{{ 'general.search.all_products' | t | default: 'All products' }}</a>
+            <a href="/collections/featured" class="search-suggestion">{{ 'general.search.featured' | t | default: 'Featured' }}</a>
+            <a href="/collections/sale" class="search-suggestion">{{ 'general.search.sale' | t | default: 'Sale' }}</a>
+            <a href="/blogs/news" class="search-suggestion">{{ 'general.search.blog' | t | default: 'Blog' }}</a>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endpaginate -%}
+
+<style>
+  .search-page {
+    padding: 4rem 0;
+  }
+
+  .search-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .search-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+  }
+
+  .search-form-wrapper {
+    max-width: 600px;
+    margin: 0 auto 2rem;
+  }
+
+  .search-form__input-wrapper {
+    position: relative;
+    display: flex;
+    border: 3px solid var(--primary-color);
+    border-radius: 30px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 15px rgba(83, 41, 166, 0.2);
+  }
+
+  .search-form__input {
+    flex: 1;
+    border: none;
+    padding: 1rem 1.5rem;
+    outline: none;
+    font-size: 1.1rem;
+  }
+
+  .search-form__submit {
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .search-results-count {
+    color: var(--text-light);
+    font-size: 1.1rem;
+  }
+
+  .search-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  .search-result--article,
+  .search-result--page {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(83, 41, 166, 0.1);
+    transition: all 0.4s ease;
+  }
+
+  .search-result--article:hover,
+  .search-result--page:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(83, 41, 166, 0.15);
+  }
+
+  .article-card__content,
+  .page-card__content {
+    padding: 1.5rem;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .search-suggestions {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .search-suggestions h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+  }
+
+  .search-suggestions__list {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .search-suggestion {
+    padding: 0.75rem 1.5rem;
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .search-suggestion:hover {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .empty-state__icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .search-title {
+      font-size: 2rem;
+    }
+    
+    .search-results {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
