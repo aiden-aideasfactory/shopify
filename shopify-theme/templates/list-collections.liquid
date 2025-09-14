@@ -1,0 +1,190 @@
+{% comment %}
+  Collections List Template
+{% endcomment %}
+
+<div class="collections-list-page">
+  <div class="container">
+    <div class="page-header">
+      <h1 class="page-title">{{ 'collections.general.title' | t | default: 'Collections' }}</h1>
+      <p class="page-description">Browse our curated collections of premium dog products</p>
+    </div>
+
+    {%- if collections.size > 0 -%}
+      <div class="collections-grid">
+        {%- for collection in collections -%}
+          {%- unless collection.handle == 'frontpage' -%}
+            <div class="collection-card">
+              <a href="{{ collection.url }}" class="collection-card__link">
+                <div class="collection-card__image">
+                  {%- if collection.featured_image != blank -%}
+                    {{ collection.featured_image | image_url: width: 600 | image_tag:
+                      loading: 'lazy',
+                      alt: collection.featured_image.alt | escape
+                    }}
+                  {%- elsif collection.products.first.featured_image != blank -%}
+                    {{ collection.products.first.featured_image | image_url: width: 600 | image_tag:
+                      loading: 'lazy',
+                      alt: collection.products.first.featured_image.alt | escape
+                    }}
+                  {%- else -%}
+                    <div class="collection-card__placeholder">
+                      🐕 {{ collection.title }}
+                    </div>
+                  {%- endif -%}
+                </div>
+                
+                <div class="collection-card__info">
+                  <h2 class="collection-card__title">{{ collection.title }}</h2>
+                  {%- if collection.description != blank -%}
+                    <p class="collection-card__description">
+                      {{ collection.description | strip_html | truncate: 120 }}
+                    </p>
+                  {%- endif -%}
+                  <p class="collection-card__count">
+                    {{ collection.products_count }} 
+                    {%- if collection.products_count == 1 -%}
+                      product
+                    {%- else -%}
+                      products
+                    {%- endif -%}
+                  </p>
+                </div>
+              </a>
+            </div>
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="empty-state">
+        <div class="empty-state__icon">🐕</div>
+        <h2>No collections yet</h2>
+        <p>Collections will appear here once you create them in your store admin.</p>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .collections-list-page {
+    padding: 4rem 0;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .page-title {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  .page-description {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .collections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .collection-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(83, 41, 166, 0.1);
+    transition: all 0.4s ease;
+  }
+
+  .collection-card:hover {
+    transform: translateY(-5px) rotate(1deg);
+    box-shadow: 0 20px 40px rgba(83, 41, 166, 0.15);
+  }
+
+  .collection-card__link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .collection-card__image {
+    height: 250px;
+    overflow: hidden;
+  }
+
+  .collection-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .collection-card:hover .collection-card__image img {
+    transform: scale(1.1);
+  }
+
+  .collection-card__placeholder {
+    height: 100%;
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
+  .collection-card__info {
+    padding: 2rem;
+  }
+
+  .collection-card__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+  }
+
+  .collection-card__description {
+    color: var(--text-dark);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .collection-card__count {
+    color: var(--text-light);
+    font-weight: 600;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .empty-state__icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .page-title {
+      font-size: 2rem;
+    }
+    
+    .collections-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

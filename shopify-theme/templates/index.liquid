@@ -1,1 +1,283 @@
-{{ content_for_index }}
+{% comment %}
+  Homepage Template
+{% endcomment %}
+
+<div class="homepage">
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="sticker sticker-1">🐾 NEW!</div>
+    <div class="sticker sticker-2">🦴 HOT</div>
+    <div class="sticker sticker-3">🐕 SALE!</div>
+    
+    <div class="container">
+      <div class="hero-content">
+        <h1>🐾 Spoil Your Best Friend</h1>
+        <p>Premium dog products that make tails wag with joy 🐕</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn">🛍️ Shop for Dogs</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Collections -->
+  <section class="collections-section">
+    <div class="container">
+      <h2 class="section-title">Featured Collections</h2>
+      <p class="section-subtitle">Curated just for you</p>
+      
+      <div class="collections-grid">
+        <div class="collection-block">
+          <div class="collection-image">
+            🦴 New Dog Arrivals
+          </div>
+          <div class="collection-info">
+            <h3>Fresh Pup Picks</h3>
+            <p>The latest dog products that have pups and parents excited</p>
+            <a href="{{ routes.all_products_collection_url }}" class="btn">Explore Collection</a>
+          </div>
+        </div>
+        
+        <div class="collection-block">
+          <div class="collection-image">
+            🐕 Best Selling Dogs
+          </div>
+          <div class="collection-info">
+            <h3>Top Tail-Waggers</h3>
+            <p>Our most loved dog products that keep flying off the shelves</p>
+            <a href="{{ routes.all_products_collection_url }}" class="btn">Shop Bestsellers</a>
+          </div>
+        </div>
+        
+        <div class="collection-block">
+          <div class="collection-image">
+            🎾 Special Dog Deals
+          </div>
+          <div class="collection-info">
+            <h3>Pawsome Offers</h3>
+            <p>Unbeatable prices on premium dog products</p>
+            <a href="{{ routes.all_products_collection_url }}" class="btn">Grab Deals</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="products-section">
+    <div class="container">
+      <h2 class="section-title">Featured Dog Products</h2>
+      <p class="section-subtitle">Handpicked for your furry friend's happiness</p>
+      
+      <div class="products-grid">
+        {%- if collections.all.products.size > 0 -%}
+          {%- for product in collections.all.products limit: 8 -%}
+            <div class="product-card">
+              <a href="{{ product.url }}" class="product-card__link">
+                <div class="product-card__image-wrapper">
+                  {%- if product.featured_image != blank -%}
+                    {{ product.featured_image | image_url: width: 500 | image_tag:
+                      loading: 'lazy',
+                      class: 'product-card__image',
+                      alt: product.featured_image.alt | escape
+                    }}
+                  {%- else -%}
+                    <div class="product-card__placeholder">
+                      {{ product.title | truncate: 20 }}
+                    </div>
+                  {%- endif -%}
+                  
+                  {%- if product.compare_at_price > product.price -%}
+                    <div class="product-badge product-badge--sale">Sale</div>
+                  {%- endif -%}
+                </div>
+              </a>
+              
+              <div class="product-card__info">
+                <h3 class="product-card__title">
+                  <a href="{{ product.url }}">{{ product.title }}</a>
+                </h3>
+                
+                <div class="product-card__price">
+                  {%- if product.compare_at_price > product.price -%}
+                    <span class="price__sale">{{ product.price | money }}</span>
+                    <span class="price__compare">{{ product.compare_at_price | money }}</span>
+                  {%- else -%}
+                    {{ product.price | money }}
+                  {%- endif -%}
+                </div>
+                
+                <form action="{{ routes.cart_add_url }}" method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  <button type="submit" class="product-card__add-button add-to-cart"
+                          {%- unless product.available %} disabled{% endunless %}>
+                    {%- if product.available -%}
+                      🛒 Add to Cart
+                    {%- else -%}
+                      Sold Out
+                    {%- endif -%}
+                  </button>
+                </form>
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
+            <h3>No products available yet</h3>
+            <p>Products will appear here once you add them to your store.</p>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Include the original CSS styles from the HTML file */
+  .hero {
+    background: var(--secondary-color);
+    padding: 6rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 10%;
+    width: 100px;
+    height: 100px;
+    background: var(--accent-gradient);
+    border-radius: 50% 20% 50% 20%;
+    opacity: 0.7;
+    animation: morph 6s ease-in-out infinite;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    right: 15%;
+    width: 80px;
+    height: 80px;
+    background: var(--primary-color);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    opacity: 0.8;
+    animation: bounce 4s ease-in-out infinite;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 10;
+  }
+
+  .hero h1 {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+    color: var(--text-dark);
+    font-weight: 500;
+  }
+
+  .collections-section {
+    padding: 6rem 0;
+    background: white;
+    position: relative;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+  }
+
+  .section-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 4rem;
+  }
+
+  .collections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .collection-block {
+    background: white;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(83, 41, 166, 0.1);
+    transition: all 0.4s ease;
+    border: 3px solid transparent;
+  }
+
+  .collection-block:hover {
+    transform: translateY(-10px) rotate(1deg);
+    box-shadow: 0 20px 50px rgba(83, 41, 166, 0.2);
+    border-color: var(--primary-color);
+  }
+
+  .collection-image {
+    height: 280px;
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+
+  .collection-info {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .collection-info h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+  }
+
+  .products-section {
+    padding: 6rem 0;
+    background: var(--secondary-color);
+    position: relative;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+    
+    .collections-grid,
+    .products-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .section-title {
+      font-size: 2rem;
+    }
+  }
+</style>
