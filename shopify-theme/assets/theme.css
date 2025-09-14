@@ -98,6 +98,27 @@ body::before {
 .sticker-2 { top: 60%; left: 5%; background: var(--success-color); transform: rotate(12deg); }
 .sticker-3 { bottom: 10%; right: 10%; background: var(--warning-color); transform: rotate(-8deg); }
 
+/* Products Grid */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Product Cards */
 .product-card {
   background: white;
@@ -182,6 +203,90 @@ body::before {
   font-size: 1rem;
   font-weight: 500;
   margin-left: 0.5rem;
+}
+
+.product-card__add-button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.product-card__add-button:hover {
+  background: var(--accent-gradient);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(83, 41, 166, 0.3);
+}
+
+.product-card__add-button:disabled {
+  background: var(--text-light);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.product-card__quick-view {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.product-card:hover .product-card__quick-view {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.product-card__quick-view:hover {
+  background: var(--primary-color);
+  color: white;
+}
+
+.product-card__vendor {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.product-card__placeholder {
+  background: var(--secondary-color);
+  color: var(--primary-color);
+  font-weight: bold;
+  font-size: 1.2rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.product-card__image--secondary {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.product-card:hover .product-card__image--secondary {
+  opacity: 1;
 }
 
 /* Collection Blocks */
